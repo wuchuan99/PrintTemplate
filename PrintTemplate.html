@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./css/PrintTemplate.css" />
+    <script src="./js/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <h2 class="text-center">结账单</h2>
+                <div class="col-lg-5">
+                    <div class="component-box">
+                        <div class="panel-module" v-for="panelModule in panelModules">
+                            <div class="panel-module-title">
+                                <h2>{{panelModule.moduleName}} <small>{{panelModule.moduleDescribe}}</small></h2>
+                            </div>
+                            <div class="panel-module-body">
+                                <div v-for="panelComponent in panelModule.components" :class="{'panel-component': true, 'switch-on': componentEnableStaus[panelComponent.id]}" @click="switchComponentStatus(panelComponent.id, componentEnableStaus[panelComponent.id])">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{panelComponent.label}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="template-container">
+                        <div class="template-module-list">
+                            <div class="template-module" v-for="templateModule in templateModules">
+                                <div class="template-row" v-for="templateRow in templateModule.rows">
+                                    <div :class="{'template-component': templateComponent.component == null, 'template-component-individuation': templateComponent.component != null, 'logo-type': templateComponent.value == '商户logo'}" v-for="templateComponent in templateRow.components" :style="templateComponent | filterStyle">
+                                        <div class="node" v-if="templateComponent.value == '文案内容'"></div>
+                                        <div class="logo" v-if="templateComponent.value == '商户logo'">
+                                            <a href="javascript:;">{{templateComponent.value}}</a>
+                                        </div>
+                                        <span v-if="templateComponent.value != '商户logo'">{{templateComponent.value}}</span>
+                                        <div class="template-component-table-title template-component" v-if="templateComponent.tableTitle != null">
+                                            {{templateComponent.tableTitle.value}}
+                                        </div>
+                                        <div class="template-component-table">
+                                            <!--thead-->
+                                            <div class="template-component-thead" v-if="templateComponent.thead != null">
+                                                <div class="template-component-tr" :style="templateComponent | filterStyle">
+                                                    <div class="table-component-td template-component" v-for="tableHeadColumn in templateComponent.thead.tableRowSet.columnSet">
+                                                        {{tableHeadColumn.value}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--tbody-->
+                                            <div class="template-component-tbody" v-if="templateComponent.tbody != null">
+                                                <div class="template-component-tr" v-if="templateComponent.category != null" :style="templateComponent | filterStyle">
+                                                    <div class="template-component-td template-component">
+                                                        <!--category-->
+                                                        {{templateComponent.category.value}}
+                                                    </div>
+                                                </div>
+                                                <div class="template-component-tr" v-for="tableTbodyRow in templateComponent.tbody.tableRowSet">
+                                                    <div class="template-component-td template-component" v-for="tableTbodyRowColumn in tableTbodyRow.columnSet" :style="tableTbodyRowColumn | filterStyle">
+                                                        {{tableTbodyRowColumn.value}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr v-if="templateComponent.component != null" />
+                                    </div>
+                                </div>
+                                <!--模块之间加水平线-->
+                                <hr v-if="templateModule.rows[0].components[0].component == null" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  </body>
+  <script src="./js/jquery.min.js"></script>
+  <script>
+      var vm = new Vue({
+          el: '#app',
+          data: {
+            panelModules: [],
+            templateModules: [],
+            componentEnableStaus: {}
+          },
+          created() {
+            this.reqAjaxAsync('./data/system-component.json').done(res => {
+                // console.log(res.modules);
+                modules = res.modules;
+
+                for (var i = 0; i < modules.length; i++) {
+                    var module = modules[i];
+                    var panelComponents = [];
+                    var rows = [];
+                    for(var j = 0; j < module.components.length; j++){
+                        var component = module.components[j];
+
+                        //左侧组件
+                        if(component.hasOwnProperty("component")){
+                            panelComponents.push(component.component);
+                            this.componentEnableStaus[component.component.id] = false;
+                        } else {
+                            panelComponents.push(component);
+                            this.componentEnableStaus[component.id] = false;
+                        }
+
+                        //右侧组件
+                        if (!component.hasOwnProperty("component")) {
+                            if (rows.length > 0) {
+                                var rowNum = component.row;
+                                var recentRowColumn = rows[rows.length - 1].components[0];
+                                if (rowNum === recentRowColumn.row) {
+                                    rows[rows.length - 1].components.push(component);
+                                    continue;
+                                }
+                            }
+                        }
+                        var row = {};
+                        var components = [];
+                        components.push(component);
+                        row.components = components;
+                        rows.push(row);
+                    }
+                    //左侧
+                    var panelModule = {};
+                    panelModule.moduleId = module.moduleId;
+                    panelModule.moduleName = module.moduleName;
+                    panelModule.moduleDescribe = module.moduleDescribe;
+                    panelModule.sort = module.sort;
+                    panelModule.components = panelComponents;
+                    this.panelModules.push(panelModule);
+
+                    //右侧
+                    var templateModule = {};
+                    templateModule.moduleId = module.moduleId;
+                    templateModule.moduleName = module.moduleName;
+                    templateModule.moduleDescribe = module.moduleDescribe;
+                    templateModule.sort = module.sort;
+                    templateModule.rows = rows;
+                    this.templateModules.push(templateModule);
+                }
+                console.log(this.panelModules);
+                console.log(this.templateModules);
+            })
+          },
+          mounted() {
+          },
+          methods: {
+              change(){
+                  this.switch = !this.switch;
+              },
+              reqAjaxAsync(url) {
+                var defer = $.Deferred();
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    dataType: "json",
+                    async: true, //默认为异步
+                    success: function(data) {
+                        defer.resolve(data);
+                    }
+                });
+                return defer.promise();
+            },
+            switchComponentStatus(parentId, showStatus){
+                console.log(parentId, showStatus);
+                this.componentEnableStaus[parentId] = !showStatus;
+                this.componentEnableStaus = Object.assign({}, this.componentEnableStaus);
+            }
+          },
+          filters: {
+            filterStyle(val){
+                var valueStyleStr = "";
+                if ("valueStyle" in val && val.valueStyle != null && val.valueStyle !== "") {
+                    var valueStyle = JSON.parse(val.valueStyle);
+                    for(key in valueStyle){
+                        if (key === "fontSize") {
+                            /*临时参数*/
+                            if (valueStyle[key] == 1) {
+                                valueStyle[key] = 12;
+                            } else if(valueStyle[key] == 2){
+                                valueStyle[key] = 16;
+                            } else {
+                                valueStyle[key] = 20;
+                            }
+                            valueStyle[key] = valueStyle[key] + "px";
+                        }
+                        valueStyleStr += key + ":" + valueStyle[key] + ";";
+                    }
+                }
+                if ("width" in val && val.width != null && val.width !== "") {
+                    valueStyleStr += "width:" + val.width + "%;";
+                }
+                return valueStyleStr;
+            }
+        }
+      })
+  </script>
+</html>
