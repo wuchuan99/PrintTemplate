@@ -82,14 +82,21 @@
 }
 
 .template-container .template-module-list .template-module .template-row {
-  display: flex;
-  justify-content: space-between;
   /*获取焦点*/
   /*店铺logo*/
 }
 
+.template-container .template-module-list .template-module .template-row .line {
+  border-bottom: 1px solid #ddd;
+  height: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+  clear: both;
+}
+
 .template-container .template-module-list .template-module .template-row .template-component {
   width: 100%;
+  float: left;
   box-sizing: border-box;
   border: 1px solid white;
 }
@@ -129,10 +136,14 @@
   width: 100%;
 }
 
+.template-container .template-module-list .template-module .template-row .template-component-individuation .template-component-table {
+  width: 100%;
+}
+
 .template-container .template-module-list .template-module .template-row .template-component-individuation .template-component-table .template-component-thead .template-component-tr,
 .template-container .template-module-list .template-module .template-row .template-component-individuation .template-component-table .template-component-tbody .template-component-tr {
-  display: flex;
-  justify-content: space-between;
+  overflow: hidden;
+  width: 100%;
 }
 
 .template-container .template-module-list .template-module .template-row .shop-logo {
@@ -152,7 +163,25 @@
 
 .template-property-panel {
   position: fixed;
-  bottom: 10%;
-  right: 18%;
-  width: 14%;
+  bottom: 100px;
+  right: 50px;
+  width: 262px;
+  height: 150px;
+}
+
+.template-property-panel .form-control {
+  width: 156px;
+}
+
+.template-property-panel .rule {
+  padding: 0 15px;
+  padding-bottom: 15px;
+}
+
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: "";
+  visibility: hidden;
+  height: 0;
 }

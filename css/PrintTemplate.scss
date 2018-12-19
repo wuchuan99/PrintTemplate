@@ -64,10 +64,16 @@
         padding: 20px 15px;
         .template-module {
             .template-row {
-                display: flex;
-                justify-content: space-between;
+                .line {
+                    border-bottom: 1px solid #ddd;
+                    height: 12px;
+                    margin-bottom: 12px;
+                    width: 100%;
+                    clear: both;
+                }
                 .template-component {
                     width: 100%;
+                    float: left;
                     box-sizing:border-box;
                     border: 1px solid white;
                     &.logo-type {
@@ -101,11 +107,12 @@
                 .template-component-individuation {
                     width: 100%;
                     .template-component-table {
+                        width: 100%;
                         .template-component-thead,
                         .template-component-tbody {
                             .template-component-tr {
-                                display: flex;
-                                justify-content: space-between;
+                                overflow: hidden;
+                                width: 100%;
                                 .table-component-td {
 
                                 }
@@ -135,7 +142,23 @@
 
 .template-property-panel {
     position: fixed;
-    bottom: 10%;
-    right: 18%;
-    width: 14%;
+    bottom: 100px;
+    right: 50px;
+    width: 262px;
+    height: 150px;
+    .form-control {
+        width: 156px;
+    }
+    .rule {
+        padding: 0 15px;
+        padding-bottom: 15px;
+    }
+}
+
+.clearfix:after{
+    display:block;
+    clear:both;
+    content:"";
+    visibility:hidden;
+    height:0
 }

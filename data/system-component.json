@@ -679,34 +679,6 @@
                           {
                               "columnSet": [
                                   {
-                                      "serverCreateTime": "2016-09-17 22:13:25",
-                                      "serverUpdateTime": "2017-02-21 22:24:40",
-                                      "creatorId": -1,
-                                      "creatorName": "system",
-                                      "updatorId": -1,
-                                      "updatorName": "system",
-                                      "statusFlag": 1,
-                                      "id": 23,
-                                      "parentId": 9,
-                                      "refId": 509,
-                                      "moduleId": 3,
-                                      "label": "商品备注",
-                                      "value": "【备注:多放肉】",
-                                      "labelStyle": null,
-                                      "valueStyle": "{\"fontSize\":\"1\",\"textAlign\":\"left\"}",
-                                      "placeholder": "#{memo}",
-                                      "type": "text",
-                                      "componentProperty": null,
-                                      "sort": 131,
-                                      "row": "41",
-                                      "column": "1",
-                                      "width": "100"
-                                  }
-                              ]
-                          },
-                          {
-                              "columnSet": [
-                                  {
                                       "serverCreateTime": "2017-02-21 22:24:40",
                                       "serverUpdateTime": "2017-02-21 22:24:40",
                                       "creatorId": -1,
@@ -796,7 +768,7 @@
                   "refId": null,
                   "moduleId": 3,
                   "label": "单品备注",
-                  "value": "控制商品里面的单品备注",
+                  "value": "【备注:多放肉】",
                   "labelStyle": null,
                   "valueStyle": null,
                   "placeholder": null,
