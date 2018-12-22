@@ -77,31 +77,7 @@
                   "row": "11",
                   "column": "1",
                   "width": "100"
-              },
-              {
-                "serverCreateTime": "2018-05-23 17:46:56",
-                "serverUpdateTime": "2018-05-23 17:46:56",
-                "creatorId": -1,
-                "creatorName": "system",
-                "updatorId": -1,
-                "updatorName": "system",
-                "statusFlag": 1,
-                "id": 586,
-                "parentId": null,
-                "refId": null,
-                "moduleId": 1,
-                "label": "发票号",
-                "value": "发票号:xxxxxxxxx",
-                "labelStyle": null,
-                "valueStyle": "{\"fontSize\":\"1\",\"textAlign\":\"left\"}",
-                "placeholder": "发票号:#{taxNumber}",
-                "type": "text",
-                "componentProperty": "{\"visiable\":\"#{taxNumber}!=0\"}",
-                "sort": 21,
-                "row": "21",
-                "column": "1",
-                "width": "100"
-            }
+              }
           ]
       },
       {
@@ -110,6 +86,30 @@
           "moduleDescribe": "配置桌台号、流水号、订单号等",
           "sort": 11,
           "components": [
+              {
+                    "serverCreateTime": "2018-05-23 17:46:56",
+                    "serverUpdateTime": "2018-05-23 17:46:56",
+                    "creatorId": -1,
+                    "creatorName": "system",
+                    "updatorId": -1,
+                    "updatorName": "system",
+                    "statusFlag": 1,
+                    "id": 586,
+                    "parentId": null,
+                    "refId": null,
+                    "moduleId": 1,
+                    "label": "发票号",
+                    "value": "发票号:xxxxxxxxx",
+                    "labelStyle": null,
+                    "valueStyle": "{\"fontSize\":\"1\",\"textAlign\":\"left\"}",
+                    "placeholder": "发票号:#{taxNumber}",
+                    "type": "text",
+                    "componentProperty": "{\"visiable\":\"#{taxNumber}!=0\"}",
+                    "sort": 21,
+                    "row": "21",
+                    "column": "1",
+                    "width": "100"
+              },
               {
                   "serverCreateTime": "2016-09-17 22:13:25",
                   "serverUpdateTime": "2016-09-17 22:13:25",

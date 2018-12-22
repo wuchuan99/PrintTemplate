@@ -373,7 +373,7 @@
             },
             {
                 "type": "text",
-                "showLine": true,
+                "showLine": false,
                 "blankNumber": 0,
                 "sort": 41,
                 "components": [

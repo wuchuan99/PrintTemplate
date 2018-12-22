@@ -1,11 +1,94 @@
 @charset "UTF-8";
+body {
+  padding-bottom: 100px;
+  background-color: #f2f2f2;
+  color: #4a4a4a;
+  font-family: Microsoft YaHei;
+  font-size: 14px;
+}
+
+#app {
+  padding: 10px 0 10px 10px;
+  padding-bottom: 0;
+}
+
+#app #header {
+  height: 52px;
+  margin-bottom: 2px;
+  min-width: 1150px;
+}
+
+#app #header .article-header {
+  width: 100%;
+  height: 52px;
+  padding: 3px 12px 3px 20px;
+  zoom: 1;
+  background: #FFF;
+}
+
+#app #header .article-header .center-block {
+  padding: 0;
+  overflow: hidden;
+  min-width: 1150px;
+}
+
+#app #header .article-header .center-block h1 {
+  float: left;
+  margin-bottom: 0;
+  margin-top: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 45px;
+}
+
+#app .mt20 {
+  margin-top: 20px;
+  background-color: #fff;
+  min-width: 1150px;
+}
+
+#app .mt20 .panel-heading {
+  margin-top: -1px;
+  margin-right: -1px;
+}
+
+#app .mt20 .panel-heading.head {
+  padding: 0;
+  overflow: hidden;
+  zoom: 1;
+  border-radius: 0;
+}
+
+#app .mt20 .panel-heading h3 {
+  border-bottom: 1px solid #dfdfdf;
+  line-height: 58px;
+}
+
+#app .mt20 .panel-heading h3.ys {
+  border-bottom: 0;
+}
+
+#app .mt20 .panel-heading h3 em {
+  font-style: normal;
+  font-size: 22px;
+  color: #555555;
+}
+
+#app .mt20 .templateName {
+  padding-bottom: 0;
+}
+
 .component-box {
   border: 4px dotted dodgerblue;
-  padding: 20px 30px;
+  padding: 10px 20px;
+  width: 392px;
+  margin: 0 20px;
+  float: left;
 }
 
 .component-box .panel-module {
-  margin: 10px 20px;
+  margin: 10px 0;
   border: 2px solid gray;
 }
 
@@ -15,16 +98,17 @@
 }
 
 .component-box .panel-module .panel-module-body {
-  padding: 2%;
+  padding: 10px 0 0 10px;
+  overflow: hidden;
   /*启用状态*/
 }
 
 .component-box .panel-module .panel-module-body .panel-component {
-  margin: 2%;
-  width: 28%;
+  margin: 0 10px 10px 0;
   background-color: gray;
-  display: inline-block;
+  float: left;
   border: 1px solid white;
+  width: 100px;
   height: 45px;
   cursor: pointer;
 }
@@ -65,9 +149,11 @@
 }
 
 .template-container {
-  width: 70%;
   border: 4px dotted dodgerblue;
-  padding: 30px 30px;
+  padding: 10px;
+  width: 360px;
+  float: left;
+  margin: 0 20px;
   background-color: #e4e4e4;
 }
 
@@ -163,10 +249,9 @@
 
 .template-property-panel {
   position: fixed;
-  bottom: 100px;
+  bottom: 80px;
+  width: 264px;
   right: 50px;
-  width: 262px;
-  height: 150px;
 }
 
 .template-property-panel .form-control {

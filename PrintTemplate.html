@@ -16,17 +16,31 @@
   </head>
   <body>
     <div id="app">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10">
-                    <h2 class="text-center">打印机-模板样式配置</h2>
+        <div id="header">
+            <div class="article-header">
+                <div class="center-block container">
+                    <h1>
+                        <span>票据样式模板</span>
+                    </h1>
                 </div>
             </div>
-            <div class="row" style="padding: 20px 0;">
-                <div class="col-lg-12">
+        </div>
+        <div class="container panel-group mt20">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="panel-heading head">
+                        <h3 class="panel-title">
+                            <em>基础设置</em>
+                            <strong>(票据类型:<span>结账单</span> 基于: <span>结账单默认模板</span>)</strong>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel-body templateName">
                     <form class="form-inline">
                         <div class="form-group">
-                            <label>模板名称<span style="color: red;font-size: 20px;">*</span></label>
+                            <label>模板名称：<span style="color: red;font-size: 20px;">*</span></label>
                             <input v-model="moduleName" type="text" maxlength="10" class="form-control" placeholder="请输入模板名称">
                         </div>
                         <button type="button" class="btn btn-danger" @click="buildCustomTemplate">保存</button>
@@ -34,122 +48,129 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-5">
-                    <div class="component-box">
-                        <div class="panel-module" v-for="panelModule in panelModules">
-                            <div class="panel-module-title">
-                                <h2 v-cloak>{{panelModule.moduleName}} <small>{{panelModule.moduleDescribe}}</small></h2>
-                            </div>
-                            <div class="panel-module-body">
-                                <div v-for="panelComponent in panelModule.components" :class="{'panel-component': true, 'switch-on': componentEnableStaus[panelComponent.id]}" @click="switchComponentStatus(panelComponent.id, componentEnableStaus[panelComponent.id])">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td v-cloak>{{panelComponent.label}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                <div class="col-lg-12 col-md-12">
+                    <div class="panel-heading head">
+                        <h3 class="panel-title ys">
+                            <em>样式配置</em>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="component-box">
+                    <div class="panel-module" v-for="panelModule in panelModules">
+                        <div class="panel-module-title">
+                            <h2 v-cloak>{{panelModule.moduleName}} <small>{{panelModule.moduleDescribe}}</small></h2>
+                        </div>
+                        <div class="panel-module-body">
+                            <div v-for="panelComponent in panelModule.components" :class="{'panel-component': true, 'switch-on': componentEnableStaus[panelComponent.id]}" @click="switchComponentStatus(panelComponent.id, componentEnableStaus[panelComponent.id])">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td v-cloak>{{panelComponent.label}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-7">
-                    <div class="template-container">
-                        <div class="template-module-list">
-                            <div class="template-module" v-for="templateModule in templateModules">
-                                <div class="template-row clearfix" v-for="templateRow in templateModule.rows">
-                                    <div :style="'height:' + 12 * templateRow.blanknumber + 'px'" v-if="templateRow.showRule"></div>
-                                    <div :class="{'template-component': templateComponent.component == null, 'template-component-individuation': templateComponent.component != null, 'logo-type': templateComponent.value == '商户logo'}"
-                                    v-for="templateComponent in templateRow.components"
-                                    :style="templateComponent | filterStyle" 
-                                    v-show="componentEnableStaus[templateComponent.id || templateComponent.component.id]"
-                                    @click="templateComponent.component == null ? doTemplateComponentActive(templateComponent) : null">
-                                        <div class="node" v-if="templateComponent.value == '文案内容'"></div>
-                                        <div class="logo" v-if="templateComponent.value == '商户logo'">
-                                            <a href="javascript:;" v-cloak>{{templateComponent.value}}</a>
-                                        </div>
-                                        <span v-if="templateComponent.value != '商户logo'" v-cloak>{{templateComponent.value}}</span>
-                                        <div 
-                                        class="template-component-table-title template-component" 
-                                        v-if="templateComponent.tableTitle != null" 
-                                        :style="templateComponent.tableTitle | filterStyle"
-                                        @click="doTemplateComponentActive(templateComponent.tableTitle)" 
-                                        v-cloak>
-                                            {{templateComponent.tableTitle.value}}
-                                        </div>
-                                        <div class="template-component-table">
-                                            <!--thead-->
-                                            <div class="template-component-thead" v-if="templateComponent.thead != null">
-                                                <div class="template-component-tr">
-                                                    <div
-                                                    class="table-component-td template-component" 
-                                                    v-for="tableHeadColumn in templateComponent.thead.tableRowSet.columnSet" 
-                                                    :style="tableHeadColumn | filterStyle"
-                                                    @click="doTemplateComponentActive(tableHeadColumn)" 
-                                                    v-cloak>
-                                                        {{tableHeadColumn.value}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--tbody-->
-                                            <div class="template-component-tbody" v-if="templateComponent.tbody != null">
-                                                <div class="template-component-tr" v-if="templateComponent.category != null">
-                                                    <div class="template-component-td template-component"
-                                                    :style="templateComponent.category | filterStyle"
-                                                    @click="doTemplateComponentActive(templateComponent.category)" 
-                                                    v-cloak>
-                                                        <!--category-->
-                                                        {{templateComponent.category.value}}
-                                                    </div>
-                                                </div>
-                                                <div class="template-component-tr" v-for="tableTbodyRow in templateComponent.tbody.tableRowSet">
-                                                    <div
-                                                    class="template-component-td template-component"
-                                                    v-for="tableTbodyRowColumn in tableTbodyRow.columnSet" 
-                                                    :style="tableTbodyRowColumn | filterStyle"
-                                                    @click="doTemplateComponentActive(tableTbodyRowColumn)" 
-                                                    v-cloak>
-                                                        {{tableTbodyRowColumn.value}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>       
+                <div class="template-container">
+                    <div class="template-module-list">
+                        <div class="template-module" v-for="templateModule in templateModules">
+                            <div class="template-row clearfix" v-for="templateRow in templateModule.rows">
+                                <div :style="'height:' + 12 * templateRow.blankNumber + 'px'" v-if="templateRow.blankNumber != 0"></div>
+                                <div :class="{'template-component': templateComponent.component == null, 'template-component-individuation': templateComponent.component != null, 'logo-type': templateComponent.value == '商户logo'}"
+                                v-for="templateComponent in templateRow.components"
+                                :style="templateComponent | filterStyle" 
+                                v-show="componentEnableStaus[templateComponent.id || templateComponent.component.id]"
+                                @click="templateComponent.component == null ? doTemplateComponentActive(templateComponent) : null">
+                                    <div class="node" v-if="templateComponent.value == '文案内容'"></div>
+                                    <div class="logo" v-if="templateComponent.value == '商户logo'">
+                                        <a href="javascript:;" v-cloak>{{templateComponent.value}}</a>
                                     </div>
-                                    <div class="line" v-if="templateRow.flag"></div>
-                                </div>    
-                            </div>
+                                    <span v-if="templateComponent.value != '商户logo'" v-cloak>{{templateComponent.value}}</span>
+                                    <div 
+                                    class="template-component-table-title template-component" 
+                                    v-if="templateComponent.tableTitle != null" 
+                                    :style="templateComponent.tableTitle | filterStyle"
+                                    @click="doTemplateComponentActive(templateComponent.tableTitle)" 
+                                    v-cloak>
+                                        {{templateComponent.tableTitle.value}}
+                                    </div>
+                                    <div class="template-component-table">
+                                        <!--thead-->
+                                        <div class="template-component-thead" v-if="templateComponent.thead != null">
+                                            <div class="template-component-tr">
+                                                <div
+                                                class="table-component-td template-component" 
+                                                v-for="tableHeadColumn in templateComponent.thead.tableRowSet.columnSet" 
+                                                :style="tableHeadColumn | filterStyle"
+                                                @click="doTemplateComponentActive(tableHeadColumn)" 
+                                                v-cloak>
+                                                    {{tableHeadColumn.value}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--tbody-->
+                                        <div class="template-component-tbody" v-if="templateComponent.tbody != null">
+                                            <div class="template-component-tr" v-if="templateComponent.category != null">
+                                                <div class="template-component-td template-component"
+                                                :style="templateComponent.category | filterStyle"
+                                                @click="doTemplateComponentActive(templateComponent.category)" 
+                                                v-cloak>
+                                                    <!--category-->
+                                                    {{templateComponent.category.value}}
+                                                </div>
+                                            </div>
+                                            <div class="template-component-tr" v-for="tableTbodyRow in templateComponent.tbody.tableRowSet">
+                                                <div
+                                                class="template-component-td template-component"
+                                                v-for="tableTbodyRowColumn in tableTbodyRow.columnSet" 
+                                                :style="tableTbodyRowColumn | filterStyle"
+                                                @click="doTemplateComponentActive(tableTbodyRowColumn)" 
+                                                v-cloak>
+                                                    {{tableTbodyRowColumn.value}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                                <div class="line" v-if="templateRow.showLine"></div>
+                            </div>    
                         </div>
                     </div>
-                    <div class="template-property-panel">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">属性</div>
-                            <div class="panel-body">
-                                <div class="form-inline">
-                                    <div class="form-group">
-                                        <label>字体大小：</label>
-                                        <select class="form-control" @change="updateTemplateProperty" v-model="activeTemplateValueStyle.fontSize">
-                                            <option @selected="activeTemplateValueStyle.fontSize == '1'" value="1">高度x1宽度x1</option>
-                                            <option @selected="activeTemplateValueStyle.fontSize == '2'" value="2">高度x2宽度x2</option>
-                                            <option @selected="activeTemplateValueStyle.fontSize == '4'" value="4">高度x4宽度x4</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group" style="margin-top: 10px;">
-                                        <label>文本对齐：</label>
-                                        <select class="form-control text" @change="updateTemplateProperty" v-model="activeTemplateValueStyle.textAlign">
-                                            <option @selected="activeTemplateValueStyle.textAlign == 'left'" value="left">左对齐</option>
-                                            <option @selected="activeTemplateValueStyle.textAlign == 'center'" value="center">居中</option>
-                                            <option @selected="activeTemplateValueStyle.textAlign == 'right'" value="right">右对齐</option>
-                                        </select>
-                                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="template-property-panel">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">属性</div>
+                        <div class="panel-body">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label>字体大小：</label>
+                                    <select class="form-control" @change="updateTemplateProperty" v-model="activeTemplateValueStyle.fontSize">
+                                        <option @selected="activeTemplateValueStyle.fontSize == '1'" value="1">高度x1宽度x1</option>
+                                        <option @selected="activeTemplateValueStyle.fontSize == '2'" value="2">高度x2宽度x2</option>
+                                        <option @selected="activeTemplateValueStyle.fontSize == '4'" value="4">高度x4宽度x4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-top: 10px;">
+                                    <label>文本对齐：</label>
+                                    <select id="text" class="form-control" @change="updateTemplateProperty" v-model="activeTemplateValueStyle.textAlign">
+                                        <option @selected="activeTemplateValueStyle.textAlign == 'left'" value="left">左对齐</option>
+                                        <option @selected="activeTemplateValueStyle.textAlign == 'center'" value="center">居中</option>
+                                        <option @selected="activeTemplateValueStyle.textAlign == 'right'" value="right">右对齐</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="rule">
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-primary" @click="updateRule(1)">插入空行</button>
-                                    <button type="button" class="btn btn-primary" @click="updateRule(2)">移除空行</button>
-                                    <button type="button" class="btn btn-primary" @click="updateRule(3)">分割线</button>
-                                </div>
+                        </div>
+                        <div class="rule">
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button type="button" class="btn btn-primary" @click="updateRule(1)">插入空行</button>
+                                <button type="button" class="btn btn-primary" @click="updateRule(2)">移除空行</button>
+                                <button type="button" class="btn btn-primary" @click="updateRule(3)">分割线</button>
                             </div>
                         </div>
                     </div>
@@ -157,9 +178,8 @@
             </div>
         </div>
     </div>
-    
   </body>
-  <script src="./js/jquery.min.js"></script>
+<script src="./js/jquery.min.js"></script>
   <script>
       var vm = new Vue({
           el: '#app',
@@ -186,27 +206,11 @@
                     var rows = [];
                     for(var j = 0; j < module.components.length; j++){
                         var component = module.components[j];
-                        var row = {};
                         //左侧组件
                         if(component.hasOwnProperty("component")){
-                            row.flag = true;
-                            row.showRule = false;
-                            row.blanknumber = 0;
-                            if(component.component.id == 9 || component.component.id == 37 || component.component.id == 607){
-                                row.flag = false;
-                            }
-                            if(component.component.id == 233 || component.component.id == 49 || component.component.id == 57) {
-                                row.flag = false;
-                            }
                             panelComponents.push(component.component);
                             this.componentEnableStaus[component.component.id] = false;
                         } else {
-                            row.flag = false;
-                            row.showRule = false;
-                            row.blanknumber = 0;
-                            if(component.id == 2 || component.id == 553 || component.id == 71) {
-                                row.flag = true;
-                            }
                             panelComponents.push(component);
                             this.componentEnableStaus[component.id] = false;
                         }
@@ -224,6 +228,7 @@
                         }
                         var components = [];
                         components.push(component);
+                        var row = {};
                         row.components = components;
                         rows.push(row);
                     }
@@ -322,15 +327,13 @@
                             //改变右侧组件分割线
                             if(templateComponent.hasOwnProperty("component")) {
                                 if(templateComponent.component.id == parentId) {
-                                    templateModule.rows[j].flag = false;
-                                    templateModule.rows[j].showRule = false;
-                                    templateModule.rows[j].blanknumber = 0;
+                                    templateModule.rows[j].showLine = false;
+                                    templateModule.rows[j].blankNumber = 0;
                                 }
                             } else {
                                 if(templateComponent.id == parentId) {
-                                    templateModule.rows[j].flag = false;
-                                    templateModule.rows[j].showRule = false;
-                                    templateModule.rows[j].blanknumber = 0;
+                                    templateModule.rows[j].showLine = false;
+                                    templateModule.rows[j].blankNumber = 0;
                                 }
                             }
                         }
@@ -362,21 +365,21 @@
                 for (var i = 0; i < previewModules.length; i++) {
                     var previewModule = previewModules[i].rows;
                     for (var j = 0; j < previewModule.length; j++) {
-                        var rows = previewModule[j].components;
+                        var rows = previewModule[j].components;                        
                         for (var n = 0; n < rows.length; n++) {
                             var component = rows[n];
                             if (component.hasOwnProperty("component")) {
                                 if (component.category) {
                                     /*注意：使用系统组件id*/
-                                    this.updateComponentValueStyle(component.category.moduleId, component.category.systemComponentId, component.category.valueStyle);
+                                    this.updateComponentValueStyle(component.category.moduleId, component.category.systemComponentId, component.category.valueStyle, previewModule[j].blankNumber, previewModule[j].showLine);
                                 }
                                 if (component.tableTitle) {
-                                    this.updateComponentValueStyle(component.tableTitle.moduleId, component.tableTitle.systemComponentId, component.tableTitle.valueStyle);
+                                    this.updateComponentValueStyle(component.tableTitle.moduleId, component.tableTitle.systemComponentId, component.tableTitle.valueStyle, previewModule[j].blankNumber, previewModule[j].showLine);
                                 }
                                 if (component.thead) {
                                     var theadRowColumns = component.thead.tableRowSet.columnSet;
                                     for (var m = 0; m < theadRowColumns.length; m++) {
-                                        this.updateComponentValueStyle(theadRowColumns[m].moduleId, theadRowColumns[m].systemComponentId, theadRowColumns[m].valueStyle);
+                                        this.updateComponentValueStyle(theadRowColumns[m].moduleId, theadRowColumns[m].systemComponentId, theadRowColumns[m].valueStyle, previewModule[j].blankNumber, previewModule[j].showLine);
                                     }
                                 }
                                 if (component.tbody) {
@@ -384,19 +387,19 @@
                                     for (var k = 0; k < tbodyRows.length; k++) {
                                         var tbodyRowColumns = tbodyRows[k].columnSet;
                                         for (var h = 0; h < tbodyRowColumns.length; h++) {
-                                            this.updateComponentValueStyle(tbodyRowColumns[h].moduleId, tbodyRowColumns[h].systemComponentId, tbodyRowColumns[h].valueStyle);
+                                            this.updateComponentValueStyle(tbodyRowColumns[h].moduleId, tbodyRowColumns[h].systemComponentId, tbodyRowColumns[h].valueStyle, previewModule[j].blankNumber, previewModule[j].showLine);
                                         }
                                     }
                                 }
                             } else {
-                                this.updateComponentValueStyle(component.moduleId, component.systemComponentId, component.valueStyle);
+                                this.updateComponentValueStyle(component.moduleId, component.systemComponentId, component.valueStyle,  previewModule[j].blankNumber, previewModule[j].showLine);
                             }
                         }
                     }
                 }
               },
               //更新自定义组件样式
-              updateComponentValueStyle(moduleId, systemComponentId, valueStyle) {
+              updateComponentValueStyle(moduleId, systemComponentId, valueStyle, blankNumber, showLine) {
                 var templateModules = this.templateModules;
                 for (var i = 0; i < templateModules.length; i++) {
                     var templateModule = templateModules[i];
@@ -409,12 +412,16 @@
                                     if (templateComponent.category) {
                                         if (templateComponent.category.id === systemComponentId) {
                                             templateComponent.category.valueStyle = valueStyle;
+                                            this.$set(templateModule.rows[j], 'blankNumber', blankNumber);
+                                            this.$set(templateModule.rows[j], 'showLine', showLine);
                                             break;
                                         }
                                     }
                                     if (templateComponent.tableTitle) {
                                         if (templateComponent.tableTitle.id === systemComponentId) {
                                             templateComponent.tableTitle.valueStyle = valueStyle;
+                                            this.$set(templateModule.rows[j], 'blankNumber', blankNumber);
+                                            this.$set(templateModule.rows[j], 'showLine', showLine);
                                             break;
                                         }
                                     }
@@ -423,6 +430,8 @@
                                         for (var m = 0; m < theadRowColumns.length; m++) {
                                             if (theadRowColumns[m].id === systemComponentId) {
                                                 theadRowColumns[m].valueStyle = valueStyle;
+                                                this.$set(templateModule.rows[j], 'blankNumber', blankNumber);
+                                                this.$set(templateModule.rows[j], 'showLine', showLine);
                                                 break;
                                             }
                                         }
@@ -434,6 +443,8 @@
                                             for (var h = 0; h < tbodyRowColumns.length; h++) {
                                                 if (tbodyRowColumns[h].id === systemComponentId) {
                                                     tbodyRowColumns[h].valueStyle = valueStyle;
+                                                    this.$set(templateModule.rows[j], 'blankNumber', blankNumber);
+                                                    this.$set(templateModule.rows[j], 'showLine', showLine);
                                                     break;
                                                 }
                                             }
@@ -442,6 +453,8 @@
                                 } else {
                                     if (templateComponent.id === systemComponentId) {
                                         templateComponent.valueStyle = valueStyle;
+                                        this.$set(templateModule.rows[j], 'blankNumber', blankNumber);
+                                        this.$set(templateModule.rows[j], 'showLine', showLine);
                                         break;
                                     }
                                 }
@@ -480,11 +493,21 @@
               updateTemplateProperty(){
                 var valueStyle = this.activeTemplateValueStyle;
                 this.activeComponent.valueStyle = JSON.stringify(valueStyle);
+                if(this.activeComponent.id == 125) {
+                    if($('#text').val() == 'left') {
+                        $('.node').css('marginLeft', 0);
+                    } else if($('#text').val() == 'center') {
+                        $('.node').css('margin', '0 auto');
+                    } else if($('#text').val() == 'right') {
+                        $('.node').css('marginRight', 0);
+                    }
+                }
               },
               //生成自定义模板
               buildCustomTemplate(){
                 if(!this.moduleName){
                     alert("模板名称不能为空");
+                    return;
                 }
                 //深拷贝templateModules
                 var templateModules = JSON.parse(JSON.stringify(this.templateModules)); 
@@ -527,34 +550,30 @@
                                 if (templateComponent.category) {
                                     if (templateComponent.category.id === activeComponent.id) {
                                         if(index == 3){
-                                            templateModule.rows[j].flag = !templateModule.rows[j].flag;
+                                            templateModule.rows[j].showLine = !templateModule.rows[j].showLine;
                                             break;
                                         } else if(index == 2){
-                                            templateModule.rows[j].blanknumber--;
-                                            if(templateModule.rows[j].blanknumber < 0){
-                                                templateModule.rows[j].blanknumber = 0;
+                                            templateModule.rows[j].blankNumber--;
+                                            if(templateModule.rows[j].blankNumber < 0){
+                                                templateModule.rows[j].blankNumber = 0;
                                             }
-                                            templateModule.rows[j].showRule = true;
-                                        } else if(index == 1){  
-                                            templateModule.rows[j].blanknumber++;
-                                            templateModule.rows[j].showRule = true;                                           
+                                        } else if(index == 1){ 
+                                            templateModule.rows[j].blankNumber++;                                           
                                         }
                                     }
                                 }
                                 if (templateComponent.tableTitle) {
                                     if (templateComponent.tableTitle.id === activeComponent.id) {
                                         if(index == 3){
-                                            templateModule.rows[j].flag = !templateModule.rows[j].flag;
+                                            templateModule.rows[j].showLine = !templateModule.rows[j].showLine;
                                             break;
                                         } else if(index == 2){
-                                            templateModule.rows[j].blanknumber--;
-                                            if(templateModule.rows[j].blanknumber < 0){
-                                                templateModule.rows[j].blanknumber = 0;
+                                            templateModule.rows[j].blankNumber--;
+                                            if(templateModule.rows[j].blankNumber < 0){
+                                                templateModule.rows[j].blankNumber = 0;
                                             }
-                                            templateModule.rows[j].showRule = true;
                                         } else if(index == 1){  
-                                            templateModule.rows[j].blanknumber++;
-                                            templateModule.rows[j].showRule = true;                                          
+                                            templateModule.rows[j].blankNumber++;                                         
                                         }    
                                     }
                                 }
@@ -563,17 +582,15 @@
                                     for (var m = 0; m < theadRowColumns.length; m++) {
                                         if (theadRowColumns[m].id === activeComponent.id) {
                                             if(index == 3){
-                                                templateModule.rows[j].flag = !templateModule.rows[j].flag;
+                                                templateModule.rows[j].showLine = !templateModule.rows[j].showLine;
                                                 break;
                                             } else if(index == 2){
-                                                templateModule.rows[j].blanknumber--;
-                                                if(templateModule.rows[j].blanknumber < 0){
-                                                    templateModule.rows[j].blanknumber = 0;
+                                                templateModule.rows[j].blankNumber--;
+                                                if(templateModule.rows[j].blankNumber < 0){
+                                                    templateModule.rows[j].blankNumber = 0;
                                                 }
-                                                templateModule.rows[j].showRule = true;
                                             } else if(index == 1){  
-                                                templateModule.rows[j].blanknumber++;
-                                                templateModule.rows[j].showRule = true;                                          
+                                                templateModule.rows[j].blankNumber++;                                          
                                             }
                                         }
                                     }
@@ -585,17 +602,15 @@
                                         for (var h = 0; h < tbodyRowColumns.length; h++) {
                                             if (tbodyRowColumns[h].id === activeComponent.id) {
                                                 if(index == 3){
-                                                    templateModule.rows[j].flag = !templateModule.rows[j].flag;
+                                                    templateModule.rows[j].showLine = !templateModule.rows[j].showLine;
                                                     break;
                                                 } else if(index == 2){
-                                                    templateModule.rows[j].blanknumber--;
-                                                    if(templateModule.rows[j].blanknumber < 0){
-                                                        templateModule.rows[j].blanknumber = 0;
+                                                    templateModule.rows[j].blankNumber--;
+                                                    if(templateModule.rows[j].blankNumber < 0){
+                                                        templateModule.rows[j].blankNumber = 0;
                                                     }
-                                                    templateModule.rows[j].showRule = true;
                                                 } else if(index == 1){  
-                                                    templateModule.rows[j].blanknumber++;
-                                                    templateModule.rows[j].showRule = true;                                          
+                                                    templateModule.rows[j].blankNumber++;                                         
                                                 }   
                                             }
                                         }
@@ -604,23 +619,23 @@
                             } else {
                                 if(templateComponent.id == activeComponent.id) {
                                     if(index == 3){
-                                        templateModule.rows[j].flag = !templateModule.rows[j].flag;   
+                                        templateModule.rows[j].showLine = !templateModule.rows[j].showLine;   
                                     } else if(index == 2){
-                                        templateModule.rows[j].blanknumber--;
-                                        if(templateModule.rows[j].blanknumber < 0){
-                                            templateModule.rows[j].blanknumber = 0;
+                                        templateModule.rows[j].blankNumber--;
+                                        if(templateModule.rows[j].blankNumber < 0){
+                                            templateModule.rows[j].blankNumber = 0;
                                         }
-                                        templateModule.rows[j].showRule = true;
                                     } else if(index == 1){
-                                        templateModule.rows[j].blanknumber++;
-                                        templateModule.rows[j].showRule = true;
+                                        console.log(templateModule.rows[j])
+                                        templateModule.rows[j].blankNumber++;
                                     }
                                 }
                             }
                         }
                     }  
                 }
-              }
+                
+              } 
           },
           filters: {
             filterStyle(val){
